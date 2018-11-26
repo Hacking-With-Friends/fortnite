@@ -1,0 +1,340 @@
+<html>
+	<head>
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@hexlify" />
+		<meta name="twitter:creator" content="@hexlify" />
+		<meta name="twitter:creator" content="@tamm" />
+		<meta property="og:url" content="https://fnite.se/" />
+		<meta property="og:title" content="DHS18 Fortnite BYOC" />
+		<meta property="og:description" content="Dreamhack Summer 2018 - Fortnite BYOC Registration" />
+		<meta property="og:image" content="https://fnite.se/logo.png" />
+		<!-- A joint effort by Tamm and DoXiD to create a quick tournament site during DreamHack Summer 2018.
+			Needless to say, we put this site together in less than 6 hours, some features were intended, some wasn't.
+			All in the good spirit of hackathon.
+
+			Thread lightly, Ye who enter here.. Here be dragons -->
+		<style type="text/css">
+			@font-face {
+				font-family: LuckGuy;
+				src: url(/LuckiestGuy-Regular.ttf);
+			}
+			body {
+				background-image: url('/background.jpg');
+				background-size: cover;
+				background-position: center center;
+				background-attachment: fixed;
+			}
+			a {
+				color: #66D9EF;
+				font-family: 'LuckGuy', cursive;
+				font-size: 24px;
+				text-decoration: none;
+			}
+
+			#content {
+				width: 300px;
+				height: 125px;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				margin-left: -150px;
+				margin-top: -162px;
+				background-color: #272822;
+				border: 1px solid #66D9EF;
+			}
+
+			#formFields {
+				width: 202px;
+				height: 50px;
+				position: absolute;
+				left: 50%;
+				top: 30px;
+				margin-left: -101px;
+			}
+
+				#formFields > form > input {
+					width: 202px;
+					margin: 1px;
+					border: 1px solid #66D9EF;
+					border-radius: 2px;
+					padding: 5px;
+				}
+
+			#solo {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 140px;
+				height: 40px;
+				border: 1px solid #66D9EF;
+				margin-top: -200px;
+				margin-left: -150px;
+				background-color: #272822;
+				color: #F8F8F0;
+				font-family: 'LuckGuy', cursive;
+				text-align: center;
+				line-height: 40px;
+			}
+
+			#duo {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 140px;
+				height: 40px;
+				border: 1px solid #66D9EF;
+				margin-top: -200px;
+				margin-left: 10px;
+				background-color: #272822;
+				color: #F8F8F0;
+				font-family: 'LuckGuy', cursive;
+				text-align: center;
+				line-height: 40px;
+			}
+			.active {
+				background-color: #49483E !important;
+			}
+
+			.active > .solo {
+				color: #66D9EF !important;
+			}
+
+			.duo {
+				color: #FD971F !important;
+			}
+
+			#popup {
+				background-color: #49483E !important;
+				border: 1px solid #66D9EF;
+				text-align-last: center;
+				color: #F8F8F0;
+			}
+
+			#popup > h3 {
+				font-family: 'LuckGuy', cursive;
+			}
+		</style>
+		<script type="text/javascript">
+			Element.prototype.remove = function() {
+				this.parentElement.removeChild(this);
+			}
+			NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+				for(var i = this.length - 1; i >= 0; i--) {
+					if(this[i] && this[i].parentElement) {
+						this[i].parentElement.removeChild(this[i]);
+					}
+				}
+			}
+
+			var timers = {};
+			function clearTimer(name) {
+				if(timers[name] !== undefined) {
+					window.clearInterval(timers[name]);
+					return true;
+				}
+				return false;
+			}
+
+			function setTimer(name, func, time=10) {
+				timers[name] = setInterval(func, time);
+			}
+
+			function register() {
+				let player_id = document.getElementById('player_id');
+				let struct, player_one, player_two;
+
+				if(player_id) {
+					player_id = player_id.value;
+					struct = {'do' : 'signup', 'mode' : 'solo', 'players' : [player_id]};
+
+					if (player_id == "") {
+						showPopup("Error", "You need to enter a fortnite in-game player name.", true);
+						document.getElementById('player_id').style.border='3px solid #FF0000';
+						return;
+					}
+				} else {
+					// Duo
+					player_one = document.getElementById('player_one').value;
+					player_two = document.getElementById('player_two').value;
+					if (player_one == "") {
+						showPopup("Error", "You need to enter two players.", true);
+						document.getElementById('player_one').style.border='3px solid #FF0000';
+						return;
+					}
+					if (player_two == "") {
+						showPopup("Error", "You need to enter two players.", true);
+						document.getElementById('player_two').style.border='3px solid #FF0000';
+						return;
+					}
+					struct = {'do' : 'signup', 'mode' : 'duo', 'players' : [player_one, player_two]};
+				}
+
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", '/signup.php', true);
+
+				//Send the proper header information along with the request
+				xhr.setRequestHeader("Content-type", "application/json");
+
+				xhr.onreadystatechange = function() {//Call a function when the state changes.
+					if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+						showPopup("Success", "Registration successful.");
+						showDiscord();
+
+					} else if (xhr.readyState == XMLHttpRequest.DONE) {
+						showPopup("Failure", "There is a problem with the signup: " + xhr.status, true);
+					}
+				}
+				xhr.send(JSON.stringify(struct)); 
+			}
+
+			function showPopup(title, content, error=false) {
+				let popup = document.getElementById('popup');
+				if(popup)
+					popup.remove();
+
+				popup = document.createElement('div');
+				popup.id = 'popup';
+
+				popup.innerHTML = '<h3 id="popup_title">'+title+'</h3>';
+				popup.innerHTML += '<p>'+content+'</p>';
+
+
+				document.body.appendChild(popup);
+				if (error) {
+					document.getElementById('popup_title').style.color = '#FD971F';
+				}
+
+				setTimer('clear_popup', function() {
+					let popup = document.getElementById('popup');
+					if(popup)
+						popup.remove();
+					clearTimer('clear_popup');
+				}, 5000);
+			}
+
+			function showSolo() {
+				let div = document.getElementById('discord');
+				if(typeof div !== 'undefined' && div) {
+					div.remove();
+				}
+				
+				let epicForm = document.getElementById('epicForm');
+				let input_player_id = document.createElement('input');
+				let subButton = document.createElement('input');
+				epicForm.innerHTML = '';
+
+				input_player_id.type = 'text';
+				input_player_id.name = 'player_id';
+				input_player_id.id = 'player_id';
+				input_player_id.placeholder = 'Your Fortnite player name';
+
+				subButton.type = 'button';
+				subButton.value = 'Sign up to Solo tournament';
+				subButton.id = 'submit';
+				subButton.addEventListener('click', register);
+
+				epicForm.appendChild(input_player_id);
+				epicForm.appendChild(subButton);
+
+				localStorage.setItem('last_mode', 'solo');
+				let soloBtn = document.getElementById('solo');
+				let duoBtn = document.getElementById('duo');
+				duoBtn.className = '';
+				soloBtn.classList.add('active');
+				soloBtn.classList.add('solo');
+
+				document.getElementById('content').style.height = '125';
+			}
+
+			function showDuo() {
+				let div = document.getElementById('discord');
+				if(typeof div !== 'undefined' && div) {
+					div.remove();
+				}
+
+				let epicForm = document.getElementById('epicForm');
+				let input_player_one = document.createElement('input');
+				let input_player_two = document.createElement('input');
+				let subButton = document.createElement('input');
+				epicForm.innerHTML = '';
+
+				input_player_one.type = 'text';
+				input_player_one.name = 'player_one';
+				input_player_one.id = 'player_one';
+				input_player_one.placeholder = 'Player one in your team';
+
+				input_player_two.type = 'text';
+				input_player_two.name = 'player_two';
+				input_player_two.id = 'player_two';
+				input_player_two.placeholder = 'Player two in your team';
+
+				subButton.type = 'button';
+				subButton.value = 'Sign up to Duo tournament';
+				subButton.id = 'submit';
+				subButton.addEventListener('click', register);
+
+				epicForm.appendChild(input_player_one);
+				epicForm.appendChild(input_player_two);
+				epicForm.appendChild(subButton);
+
+				document.getElementById('content').style.height = '150';
+
+				let soloBtn = document.getElementById('solo');
+				let duoBtn = document.getElementById('duo');
+				soloBtn.className = '';
+				duoBtn.classList.add('active');
+				duoBtn.classList.add('solo');
+			}
+
+			function showDiscord() {
+				// https://discord.gg/S9wf2RM
+				let div = document.getElementById('discord');
+				if(typeof div !== 'undefined' && div) {
+					div.remove();
+				}
+				div = document.createElement('div');
+				let p = document.createElement('p');
+				div.style.width = '100%';
+				div.id='discord';
+				p.style.color = '#F8F8F0';
+				//p.style.fontFamily = 'LuckGuy';
+				p.innerHTML = 'Keys, Game Invites and Announcements will be given via discord:'
+
+				div.appendChild(p);
+				div.innerHTML += '<a href="https://discord.gg/S9wf2RM">Join Discord</a>';
+
+				document.getElementById('formFields').appendChild(div);
+				document.getElementById('content').style.height = '255';
+			}
+
+			window.onload = function() {
+				let solo = document.getElementById('solo');
+				let duo = document.getElementById('duo');
+
+				solo.addEventListener('click', function(e) {
+					showSolo();
+				});
+
+				duo.addEventListener('click', function(e) {
+					showDuo();
+				});
+
+				let mode = localStorage.getItem('last_mode');
+				if(mode && mode != 'duo')
+					showSolo();
+				else
+					showDuo();
+			}
+		</script>
+	</head>
+	<body>
+		<div id="solo">Solo</div> <div id="duo">Duo</div>
+		<div id="content">
+			<div id="formFields">
+				<form method="POST" action="" id="epicForm">
+				</form>
+			</div>
+	    	<img id="preview" src="">
+		</div>
+	</body>
+</html>

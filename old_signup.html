@@ -1,0 +1,151 @@
+<html>
+	<head>
+		<style type="text/css">
+			body {
+				background-image: url('./background.jpg');
+				background-size: cover;
+				background-position: center center;
+			}
+
+			#content {
+				width: 300px;
+				height: 325px;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				margin-left: -150px;
+				margin-top: -162px;
+				background-color: #272822;
+				border: 1px solid #66D9EF;
+			}
+
+			#formFields {
+				width: 202px;
+				height: 270px;
+				position: absolute;
+				left: 50%;
+				top: 40PX;
+				margin-left: -101px;
+			}
+
+				#formFields > form > input {
+					width: 202px;
+					margin: 1px;
+				}
+
+				#formFields > form > p {
+					font-size: 12px;
+					color: #F8F8F0;
+				}
+
+					#formFields > form > p > b {
+						font-size: 12px;
+						color: #66D9EF;
+					}
+
+				#submit {
+					position: absolute;
+					left: 50%;
+					bottom: 0px;
+					width: 110px !important;
+					margin-left: -55px !important;
+				}
+
+			#preview {
+				position: absolute;
+				right: -290px;
+				top: 40px;
+				width: 300px;
+				max-height: 300px;
+				visibility: hidden;
+				border: 1px solid #66D9EF;
+			}
+		</style>
+		<script type="text/javascript">
+			function submitScore() {
+				let player_id = document.getElementById('player_id').value;
+				let placement = document.getElementById('placement').value;
+				let kills = document.getElementById('kills').value;
+				let screenshot = document.getElementById('preview').getAttribute('src');
+
+				localStorage.setItem('username', player_id);
+				if (player_id == "") {
+					console.log('Need to enter a player id.');
+					document.getElementById('player_id').style.border='3px solid #FF0000';
+				}
+				if (placement == "") {
+					console.log('Need to enter a placement.');
+					document.getElementById('placement').style.border='3px solid #FF0000';
+				}
+				if (kills == "") {
+					console.log('Need to enter a kill-count.');
+					document.getElementById('kills').style.border='3px solid #FF0000';
+				}
+				if (screenshot == "") {
+					console.log("Need a screenshot");
+					document.getElementById('addScreenie').style.border='3px solid #FF0000';
+					document.getElementById('addScreenie').style.color='#FF0000';
+				}
+
+				if(kills != "" && placement != "" && screenshot != "") {
+					var xhr = new XMLHttpRequest();
+					xhr.open("POST", '/upload.php', true);
+
+					//Send the proper header information along with the request
+					xhr.setRequestHeader("Content-type", "application/json");
+
+					xhr.onreadystatechange = function() {//Call a function when the state changes.
+						if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+							console.log("Successfully uploaded");
+						} else if (xhr.readyState == XMLHttpRequest.DONE) {
+							console.log("Something whent wrong: " + xhr.status);
+						}
+					}
+					xhr.send(JSON.stringify({"player_id": player_id, "placement": placement, "kills": kills, "screenshot": screenshot})); 
+				}
+
+			}
+
+			window.onload = function() {
+				let username = localStorage.getItem('username');
+				if(typeof username !== 'undefined' && username) {
+					document.getElementById('player_id').value = username;
+				}
+
+				let fileForm = document.getElementById('screenshot');
+				let imgPreview = document.getElementById('preview');
+
+				fileForm.addEventListener('change', function(e) {
+					var reader = new FileReader();
+
+					reader.onload = function(e) {
+						imgPreview.setAttribute('src', e.target.result);
+						imgPreview.style.visibility = 'visible';
+					}
+
+					reader.readAsDataURL(fileForm.files[0]);
+
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div id="content">
+			<div id="formFields">
+				<form method="POST" action="">
+					<input type="text" name="player_id" id="player_id" placeholder="In-game fortnite name"><br>
+					<p>Below, you will enter what placement you got and how many kills. For instance, if you got 3:d place with 10 kills,
+						that will be <b>3</b> and <b>10</b> in the boxes below:</p>
+					<input type="text" name="placement" id="placement" placeholder="What place did you get?"><br>
+					<input type="text" name="kills" id="kills" placeholder="How many kills did you get?"><br>
+					<br>
+					<input type="file" name="screenshot" id="screenshot" style="display: none;">
+					<input type="button" value="Select Screenshot Evidence" id="addScreenie" onclick="document.getElementById('screenshot').click();" />
+	    			<input type="button" value="Upload Score" id="submit" onclick="submitScore()";><br>
+	    			<br>
+				</form>
+			</div>
+	    	<img id="preview" src="">
+		</div>
+	</body>
+</html>
