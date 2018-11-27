@@ -15,8 +15,20 @@
 			Thread lightly, Ye who enter here.. Here be dragons -->
 		<style type="text/css">
 			@font-face {
-				font-family: LuckGuy;
-				src: url(/LuckiestGuy-Regular.ttf);
+				font-family: LuckyGuy;
+				src: url('/LuckiestGuy-Regular.ttf');
+			}
+
+			:root {
+				--blue: #62CFEE;
+				--pink: #F92472;
+				--green: #A6E22C;
+				--yellow: #E7DB74;
+				--orange: #f60;
+				--moreorange: #66D9EF;
+				--teal: #66D9EF;
+				--darkish: #74705D;
+				--dark: #2a2a2a;
 			}
 
 			body {
@@ -24,19 +36,139 @@
 				background-size: cover;
 				background-position: center center;
 				background-attachment: fixed;
+				margin: 0px;
+				padding: 0px;
+				color: #FFFFFF;
+				font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
 			}
 
+			input {
+				vertical-align: middle;
+				outline: none;
+				box-shadow: none;
+				border: 0px;
+
+				color: #000000;
+				border-radius: 2px;
+
+				width: 120px;
+				height: 50px;
+			}
+
+			input[type=text], input[type=password] {
+				height: 40px;
+				color: #e7e7e7;
+				background-color: #393939;
+
+				width: 202px;
+				margin: 1px;
+				padding: 5px;
+				border-radius: 2px;
+			}
+
+			input[type=submit] {
+				/*color: #e7e7e7;*/
+				background-color: #FF0;
+				cursor: pointer;
+			}
+
+			#menu {
+				width: 100%;
+				height: 50px;
+				border-bottom: 1px solid var(--blue);
+				background-color: var(--dark);
+			}
+
+				#menu > .company {
+					font-family: 'LuckyGuy', cursive;
+					font-size: 30px;
+					max-width: 140px;
+					padding: 0px;
+					line-height: 24px;
+					margin: 0px;
+					padding-top: 5px;
+					padding-left: 10px;
+					cursor: pointer;
+				}
+
+					#menu > .company > .upper {
+						display: block;
+						margin: 0px;
+					}
+
+					#menu > .company > .bottom {
+						color: var(--orange);
+						display: inline;
+						margin: 0px;
+					}
+
+				#menu > .buttons {
+					position: absolute;
+					top: 0px;
+					left: 160px;
+				}
+
+					#menu > .buttons > input[type=button] {
+						border-radius: 0px;
+					}
+					#menu > .buttons > input[type=button]:hover {
+						background-color: var(--blue);
+					}
+					#menu > .buttons > input[type=button]:active {
+						background-color: var(--blue);
+					}
+
 			#content {
-				width: 300px;
-				height: 380px;
 				position: absolute;
 				left: 50%;
-				top: 50%;
-				margin-left: -150px;
-				margin-top: -162px;
+				top: 50px;
+				width: 700px;
+				margin-left: -350px;
 				background-color: #272822;
 				border: 1px solid #66D9EF;
+
+				column-count: 2;
+				column-width: 50%;
+				column-gap: 2px;
+
+				padding-bottom: 30px;
 			}
+
+				#content > div > table {
+					text-align: center;
+					break-inside: avoid;
+					width: 100%;
+				}
+
+					.mode {
+						font-size: 34px;
+						padding: 20px;
+					}
+
+					.pname, .pscore {
+						font-size: 34px;
+						padding: 20px;
+						opacity: 0.8;
+					}
+
+					.name {
+						font-family: Arial, sans-serif;
+						font-weight: bold;
+					}
+
+					.solo {
+						padding-bottom: 0px;
+						padding-top: 40px;
+						font-family: 'LuckyGuy', cursive;
+						color: var(--green);
+					}
+
+					.duo {
+						padding-bottom: 0px;
+						padding-top: 40px;
+						font-family: 'LuckyGuy', cursive;
+						color: var(--blue);
+					}
 
 			#formFields {
 				width: 202px;
@@ -47,13 +179,6 @@
 				margin-left: -101px;
 			}
 
-				#formFields > form > input {
-					width: 202px;
-					margin: 1px;
-					padding: 5px;
-					border: 1px solid #66D9EF;
-					border-radius: 2px;
-				}
 
 				#formFields > form > p {
 					font-size: 12px;
@@ -82,7 +207,8 @@
 				visibility: hidden;
 				border: 1px solid #66D9EF;
 			}
-			#solo {
+
+			#TODO > #solo {
 				position: absolute;
 				top: 50%;
 				left: 50%;
@@ -98,7 +224,7 @@
 				line-height: 40px;
 			}
 
-			#duo {
+			#TODO > #duo {
 				position: absolute;
 				top: 50%;
 				left: 50%;
@@ -118,29 +244,97 @@
 				background-color: #49483E !important;
 			}
 
-			.active > .solo {
+			#TODO > .active > .solo {
 				color: #66D9EF !important;
 			}
 
-			.duo {
+			#TODO > .duo {
 				color: #FD971F !important;
 			}
 
 			#popup {
-				background-color: #49483E !important;
-				border: 1px solid #66D9EF;
-				text-align-last: center;
-				color: #F8F8F0;
+				border: 1px solid var(--blue);
+				text-align: center;
+			}
+				#popup > input[type=submit] {
+					/*color: #e7e7e7;*/
+					background-color: var(--green);
+					cursor: pointer;
+				}
+
+				#popup > p {
+					color: var(--pink);
+					padding: 1px;
+					padding-left: 4px;
+					font-size: 10px;
+					font-weight: bold;
+					display: inline-block;
+					cursor: pointer;
+				}
+					#popup > p:hover {
+						font-size: 12px;
+					}
+
+				.button {
+					position: absolute;
+					bottom: 0px;
+					left: 0px;
+					width: 100%;
+				}
+
+			#notification {
+				width: 450px;
+				position: absolute;
+				left: 50%;
+				top: 120px;
+				margin-left: -225px;
+				margin-top: -90px;
+				background-color: #272822;
+				border: 1px solid var(--blue);
+				text-align: center;
+			}
+				.error {
+					border: 1px solid var(--pink) !important;
+					background-color: var(--orange) !important;
+				}
+
+				.error > h3 {
+					color: var(--pink) !important;
+				}
+
+				#notification > h3 {
+					font-family: 'LuckGuy', cursive;
+					font-size: 25px;
+				}
+
+			.fileuploader {
+				width: 0.1px;
+				height: 0.1px;
+				opacity: 0;
+				overflow: hidden;
+				position: absolute;
+				z-index: -1;
 			}
 
-			#popup > h3 {
-				font-family: 'LuckGuy', cursive;
+				.fileuploadlabel {
+					color: var(--blue);
+					padding: 15px !important;
+					font-size: 12px;
+					font-weight: bold;
+					cursor: pointer;
+					background-color: #393939;
+					border-radius: 3px;
+				}
+
+			.error_msg {
+				text-align: left;
 			}
 
 		</style>
 		<script type="text/javascript">
 			Element.prototype.remove = function() {
-				this.parentElement.removeChild(this);
+				if (this.parentElement)
+					this.parentElement.removeChild(this);
 			}
 			NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
 				for(var i = this.length - 1; i >= 0; i--) {
@@ -151,6 +345,10 @@
 			}
 
 			var timers = {};
+			let mouse = {};
+			let sprites = {};
+			let fileToUpload = null; // Will hold the screenshot, because lack of better understanding shady javascript.
+
 			function clearTimer(name) {
 				if(timers[name] !== undefined) {
 					window.clearInterval(timers[name]);
@@ -163,295 +361,479 @@
 				timers[name] = setInterval(func, time);
 			}
 
+			function destroy(obj) {
+				if(obj)
+					obj.remove();
+			}
+
+			function populateChildren(parent, objects) {
+				Object.entries(objects).forEach(([index, val]) => {
+					let key = Object.keys(val)[0];
+					let o = document.createElement(key);
+
+					if(typeof val[key]["styles"] !== 'undefined') {
+						Object.entries(val[key]["styles"]).forEach(([s, sval]) => {
+							o.style[s] = sval;
+						});
+					}
+
+					Object.entries(val[key]).forEach(([property, propval]) => {
+						if(property == "objects" || property == "styles")
+							return;
+
+						if(property == "innerHTML")
+							o.innerHTML += propval;
+						else
+							o.setAttribute(property, propval);
+					});
+
+					if(typeof val[key]["objects"] !== 'undefined') {
+						populateChildren(o, val[key]["objects"]);
+					}
+
+					parent.appendChild(o);
+				});
+			}
+
+			function destoryPopup(e) {
+				if(Date.now() - sprites['popup'].time < 100)
+					return;
+
+				let height = sprites['popup'].obj.scrollHeight;
+				let width = sprites['popup'].obj.scrollWidth;
+				let x_pos = sprites['popup'].obj.offsetLeft;
+				let y_pos = sprites['popup'].obj.offsetTop;
+
+				let x = e.clientX;
+				let y = e.clientY;
+
+				if ((x < x_pos || x > (x_pos+width)) || (y < y_pos || y > (y_pos+height))) {
+					destroy(sprites['popup'].obj);
+					clearTimeout(timers['closePopup']);
+					delete timers['closePopup'];
+				}
+			}
+
+			function showPopup(struct) {
+				if(typeof mouse['close_popup'] !== 'undefined') {
+					delete mouse['close_popup'];
+				}
+				if(typeof sprites['popup'] !== 'undefined') {
+					destroy(sprites['popup'].obj);
+					delete sprites['popup'];
+				}
+
+				let d = document.createElement('div');
+				d.id = 'popup';
+				Object.entries(struct["styles"]).forEach(([key, val]) => {
+					d.style[key] = val;
+				});
+
+				if(typeof struct["objects"] !== 'undefined')
+					populateChildren(d, struct["objects"]);
+				document.body.appendChild(d);
+
+				mouse["close_popup"] = destoryPopup;
+				sprites['popup'] = {"obj" : d, "time" : Date.now()};
+			}
+
 			function submitScore() {
-				let player_id_obj = document.getElementById('player_id');
-				let player_id = '';
-				if(typeof player_id_obj === 'undefined' || !player_id_obj) {
-					player_id = document.getElementById('player_one').value + ', ' + document.getElementById('player_two').value;
-					localStorage.setItem('player_one', document.getElementById('player_one').value);
-					localStorage.setItem('player_two', document.getElementById('player_two').value);
+				let player_id = document.getElementById('player_id');
+				let player_one = document.getElementById('player_one');
+				let player_two = document.getElementById('player_two');
+				if(player_id && player_id.value != '') {
+					localStorage.setItem('player_id', player_id.value);
+
 				} else {
-					player_id = player_id_obj.value;
-					localStorage.setItem('username', player_id);
+					if(player_one && player_one.value != '')
+						localStorage.setItem('player_one', player_one.value);
+					if(player_two && player_two.value != '')
+						localStorage.setItem('player_two', player_two.value);
 				}
 
 				let placement = document.getElementById('placement').value;
 				let kills = document.getElementById('kills').value;
 				let screenshot = document.getElementById('preview').getAttribute('src');
 
-				if (player_id == "") {
-					showPopup("Error", "You need to enter a fortnite in-game player name.", true);
+				if(player_id && player_id.value == '') {
+					notify("Error", "You need to enter a fortnite in-game player name.", true);
 					document.getElementById('player_id').style.border='3px solid #FF0000';
 					return;
 				}
+				if (player_one && player_one.value == '') {
+					notify("Error", "You need to enter a fortnite in-game name for player #1.", true);
+					document.getElementById('player_one').style.border='3px solid #FF0000';
+					return;
+				}
+				if (player_two && player_two.value == '') {
+					notify("Error", "You need to enter a fortnite in-game name for player #2.", true);
+					document.getElementById('player_two').style.border='3px solid #FF0000';
+					return;
+				}
 				if (placement == "") {
-					showPopup("Error", "You need to enter what place you ended up in.", true);
+					notify("Error", "You need to enter what place you ended up in.", true);
 					document.getElementById('placement').style.border='3px solid #FF0000';
 					return;
 				}
 				if (kills == "") {
-					showPopup("Error", "You need to enter how many kills you got.", true);
+					notify("Error", "You need to enter how many kills you got.", true);
 					document.getElementById('kills').style.border='3px solid #FF0000';
 					return;
 				}
-				if (screenshot == "") {
-					showPopup("Error", "You need to attach a screenshot for this game as evidence.", true);
-					document.getElementById('addScreenie').style.border='3px solid #FF0000';
-					document.getElementById('addScreenie').style.color='#FF0000';
+				if (!screenshot || screenshot == "" || !fileToUpload) {
+					notify("Error", "You need to attach a screenshot for this game as evidence.", true);
+					document.getElementById('fileToUpload_label').style.border='3px solid #FF0000';
+					document.getElementById('fileToUpload_label').style.color='#FF0000';
 					return;
 				}
 
 				if(kills != "" && placement != "" && screenshot != "") {
+					let formData = new FormData();
+					if(document.getElementById('player_id'))
+						formData.append("player_id", document.getElementById('player_id').value);
+					if(document.getElementById('player_one'))
+						formData.append("player_one", document.getElementById('player_one').value);
+					if(document.getElementById('player_two'))
+						formData.append("player_two", document.getElementById('player_two').value);
+					formData.append('placement', document.getElementById('placement').value);
+					formData.append('kills', document.getElementById('kills').value);
+					formData.append("screenshot", fileToUpload);
+
 					var xhr = new XMLHttpRequest();
-					xhr.open("POST", '/upload.php', true);
+					xhr.open("POST", './upload.php', true);
 
 					//Send the proper header information along with the request
-					xhr.setRequestHeader("Content-type", "application/json");
+					//xhr.setRequestHeader("Content-type", "application/json");
 
-					xhr.onreadystatechange = function() {//Call a function when the state changes.
-						let data = {};
-						if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-							data = JSON.parse(xhr.response);
-						}
-						if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200 && (typeof data['result'] !== 'undefined' && data['result'] != 'failed')) {
-							let mode = localStorage.getItem('last_mode');
-							if(mode && mode != 'duo')
-								showSolo();
-							else
-								showDuo();
+					xhr.onreadystatechange = function() {
+						if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+							let data = JSON.parse(this.responseText);
 
-							showPopup('Success', 'Successfully submitted your score.');
-						} else if (xhr.readyState == XMLHttpRequest.DONE) {
-							showPopup('Failed', 'Could not submit your screenshot, try again later or contact E-Sport. Error code: ' + xhr.status + ' ('+data['reason']+')', true);
+							if(data.status == 'successful' || data.result == 'success') {
+								destroy(sprites['popup'].obj);
+								delete sprites['popup'];
+								delete mouse["close_popup"];
+								showScoreboard();
+								notify(data.title, data.message);
+							} else {
+								console.log(data);
+								notify(data.title, data.message);
+							}
 						}
 					}
-					xhr.send(JSON.stringify({"player_id": player_id, "placement": placement, "kills": kills, "screenshot": screenshot})); 
+
+					xhr.send(formData);
 				}
 			}
 
-			function showPopup(title, content, error=false) {
-				let popup = document.getElementById('popup');
-				if(popup)
-					popup.remove();
-
-				popup = document.createElement('div');
-				popup.id = 'popup';
-
-				popup.innerHTML = '<h3 id="popup_title">'+title+'</h3>';
-				popup.innerHTML += '<p>'+content+'</p>';
-
-
-				document.body.appendChild(popup);
-				if (error) {
-					document.getElementById('popup_title').style.color = '#FD971F';
-				}
-
-				setTimer('clear_popup', function() {
+			function notify(title, content, error=false, clear_popup) {
+				if(clear_popup) {
 					let popup = document.getElementById('popup');
 					if(popup)
 						popup.remove();
+				}
+
+				notification = document.createElement('div');
+				notification.id = 'notification';
+
+				notification.innerHTML = '<h3 id="popup_title">'+title+'</h3>';
+				notification.innerHTML += '<p>'+content+'</p>';
+
+
+				document.body.appendChild(notification);
+				if (error) {
+					document.getElementById('popup_title').style.color = '#FD971F';
+					notification.setAttribute('class', 'error');
+				}
+
+				setTimer('clear_popup', function() {
+					let notification = document.getElementById('notification');
+					if(notification)
+						notification.remove();
 					clearTimer('clear_popup');
 				}, 5000);
 			}
 
-			function showSolo() {
-				let epicForm = document.getElementById('epicForm');
-				let player_id = document.createElement('input');
-				let description = document.createElement('p'); description.type = 'text';
-				let placement = document.createElement('input'); placement.type = 'text';
-				let kills = document.createElement('input'); kills.type = 'text';
-				let file = document.createElement('input'); file.type = 'file';
-				let addScreenie = document.createElement('input'); addScreenie.type='button';
-				let br = document.createElement('br');
-				let subButton = document.createElement('input');
-				epicForm.innerHTML = '';
+			function showScoreboard() {
+				let xhr = new XMLHttpRequest();
+				xhr.open("GET", "./scoreboard.php", true);
 
-				player_id.type = 'text';
-				player_id.name = 'player_id';
-				player_id.id = 'player_id';
-				player_id.placeholder = 'Your fortnite player name';
-
-				description.innerHTML = 'Below, you will enter what placement you got and how many kills. For instance, if you got 3:d place with 10 kills, that will be <b>3</b> and <b>10</b> in the boxes below:'
-
-				placement.id='placement';
-				placement.placeholder = 'What place did you get?';
-				kills.id = 'kills';
-				kills.placeholder = 'How many kills did you get?';
-				file.id='screenshot';
-				file.style.display='none';
-				addScreenie.id='addScreenie';
-				addScreenie.value='Select Screenshot Evidence';
-				addScreenie.addEventListener('click', function() {
-					document.getElementById('screenshot').click();
-				})
-
-				subButton.type = 'button';
-				subButton.value = 'Submit your score';
-				subButton.id = 'submit';
-				subButton.addEventListener('click', submitScore);
-
-				let preview = document.createElement('img'); preview.id='preview';
-				preview.src = '';
-
-
-				epicForm.appendChild(player_id);
-				epicForm.appendChild(description);
-				epicForm.appendChild(placement);
-				epicForm.appendChild(kills);
-				epicForm.innerHTML += '<br><br>';
-				epicForm.appendChild(file);
-				epicForm.appendChild(addScreenie);
-				epicForm.appendChild(subButton);
-				epicForm.appendChild(preview);
-
-//				document.getElementById('formFields').style.height = '280';
-//				document.getElementById('content').style.height = '340';
-				
-				let username = localStorage.getItem('username');
-				if(typeof username !== 'undefined' && username) {
-					document.getElementById('player_id').value = username;
+				xhr.onreadystatechange = function() {
+					if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+						document.getElementById('content').innerHTML = this.responseText;
+					}
 				}
 
-				let fileForm = document.getElementById('screenshot');
-				let imgPreview = document.getElementById('preview');
-
-				fileForm.addEventListener('change', function(e) {
-					var reader = new FileReader();
-
-					reader.onload = function(e) {
-						imgPreview.setAttribute('src', e.target.result);
-						imgPreview.style.visibility = 'visible';
-					}
-
-					reader.readAsDataURL(fileForm.files[0]);
-				});
-
-				localStorage.setItem('last_mode', 'solo');
-				let soloBtn = document.getElementById('solo');
-				let duoBtn = document.getElementById('duo');
-				duoBtn.className = '';
-				soloBtn.classList.add('active');
-				soloBtn.classList.add('solo');
+				xhr.send();
 			}
 
-			function showDuo() {
-				let epicForm = document.getElementById('epicForm');
-				let input_player_one = document.createElement('input');
-				let input_player_two = document.createElement('input');
-				let description = document.createElement('p'); description.type = 'text';
-				let placement = document.createElement('input'); placement.type = 'text';
-				let kills = document.createElement('input'); kills.type = 'text';
-				let file = document.createElement('input'); file.type = 'file';
-				let addScreenie = document.createElement('input'); addScreenie.type='button';
-				let subButton = document.createElement('input');
-				epicForm.innerHTML = '';
+			function showSoloSubForm() {
+				let player_id = localStorage.getItem('player_id');
+				showPopup({"styles" : {"width" : "300px",
+										"height" : "330px",
+										"position" : "absolute",
+										"left" : "50%",
+										"top" : "50%",
+										"marginLeft" : "-150px",
+										"marginTop" : "-150px",
+										"backgroundColor" : "#2a2a2a",
+										"borderRadius" : "3px"},
+							"objects" : [
 
-				input_player_one.type = 'text';
-				input_player_one.name = 'player_one';
-				input_player_one.id = 'player_one';
-				input_player_one.placeholder = 'Player one in your team';
+								{"h3" : {
+									"innerHTML" : "Registrera SOLO match"
+									}
+								},
+								{"input" : {
+									"id" : "player_id",
+									"name" : "player_id",
+									"type" : "text",
+									"placeholder" : "Spelarnamn",
+									"value" : player_id ? player_id : '',
+									}
+								},
+								{"input" : {
+									"id" : "placement",
+									"name" : "placement",
+									"type" : "text",
+									"placeholder" : "Placering",
+									}
+								},
+								{"input" : {
+									"id" : "kills",
+									"name" : "kills",
+									"type" : "text",
+									"placeholder" : "Kills",
+									}
+								},
+								{"br" : {}},
+								{"br" : {}},
+								{"img" : {
+									"id" : "preview",
+									}
+								},
+								{"input" : {
+										"id" : "fileToUpload",
+										"name" : "fileToUpload",
+										"class" : "fileuploader",
+										"type" : "file"
+										}
+									},
+									{"label" : {
+										"id" : "fileToUpload_label",
+										"for" : "fileToUpload",
+										"class" : "fileuploadlabel",
+										"innerHTML" : "Bifoga en screenshot!"
+										}
+									},
+								{"p" : {
+									"id" : "duolink",
+									"class" : "button",
+									"styles" : {"marginBottom" : "60px"},
+									"innerHTML" : "Gå till duo-formuläret"
+									}
+								},
+								{"input" : {
+									"id" : "sendbutton",
+									"class" : "button",
+									"type" : "submit",
+									"value" : "Registrera",
+									"name" : "submit"
+									}
+								}
+							]
+						});
 
-				input_player_two.type = 'text';
-				input_player_two.name = 'player_two';
-				input_player_two.id = 'player_two';
-				input_player_two.placeholder = 'Player two in your team';
-
-				description.innerHTML = 'Below, you will enter what placement you got and how many kills. For instance, if you got 3:d place with 10 kills, that will be <b>3</b> and <b>10</b> in the boxes below:'
-
-				placement.id='placement';
-				placement.placeholder = 'What place did you get?';
-				kills.id = 'kills';
-				kills.placeholder = 'How many kills did you get?';
-				file.id='screenshot';
-				file.style.display='none';
-				addScreenie.id='addScreenie';
-				addScreenie.value='Select Screenshot Evidence';
-				addScreenie.addEventListener('click', function() {
-					document.getElementById('screenshot').click();
-				})
-
-				subButton.type = 'button';
-				subButton.value = 'Submit your team score';
-				subButton.id = 'submit';
-				subButton.addEventListener('click', submitScore);
-
-				let preview = document.createElement('img'); preview.id='preview';
-				preview.src = '';
-
-				epicForm.appendChild(input_player_one);
-				epicForm.appendChild(input_player_two);
-				epicForm.appendChild(description);
-				epicForm.appendChild(placement);
-				epicForm.appendChild(kills);
-				epicForm.appendChild(file);
-				epicForm.appendChild(addScreenie);
-				epicForm.appendChild(subButton);
-				epicForm.appendChild(preview);
-
-//				document.getElementById('formFields').style.height = '280';
-//				document.getElementById('content').style.height = '340';
-
-				let player_one = localStorage.getItem('player_one');
-				let player_two = localStorage.getItem('player_two');
-
-				if(typeof player_one !== 'undefined' && player_one) {
-					document.getElementById('player_one').value = player_one;
-				}
-				if(typeof player_two !== 'undefined' && player_two) {
-					document.getElementById('player_two').value = player_two;
-				}
-
-				let fileForm = document.getElementById('screenshot');
-				let imgPreview = document.getElementById('preview');
-
-				fileForm.addEventListener('change', function(e) {
+				document.getElementById('fileToUpload').onchange = function(event) {
 					var reader = new FileReader();
 
 					reader.onload = function(e) {
-						imgPreview.setAttribute('src', e.target.result);
-						imgPreview.style.visibility = 'visible';
+						document.getElementById('preview').setAttribute('src', e.target.result);
+						document.getElementById('preview').style.visibility = 'visible';
+
+						document.getElementById('fileToUpload_label').style.color = 'var(--green)';
+						document.getElementById('fileToUpload_label').innerHTML = 'Bifogad bild -->'
 					}
 
-					reader.readAsDataURL(fileForm.files[0]);
-				});
 
-				localStorage.setItem('last_mode', 'duo');
+					fileToUpload = event.target.files[0];
+					reader.readAsDataURL(document.getElementById('fileToUpload').files[0]);
+				};
 
-				let soloBtn = document.getElementById('solo');
-				let duoBtn = document.getElementById('duo');
-				soloBtn.className = '';
-				duoBtn.classList.add('active');
-				duoBtn.classList.add('solo');
+				document.getElementById('duolink').addEventListener('click', function() {
+					showDuoSubForm();
+				})
+
+				document.getElementById('sendbutton').addEventListener('click', function() {
+					submitScore();
+				})
+
+				document.getElementById('player_id').focus();
+			}
+
+			function showDuoSubForm() {
+				let player_one = localStorage.getItem('player_one');
+				let player_two = localStorage.getItem('player_two');
+				showPopup({"styles" : {"width" : "300px",
+										"height" : "370px",
+										"position" : "absolute",
+										"left" : "50%",
+										"top" : "50%",
+										"marginLeft" : "-150px",
+										"marginTop" : "-150px",
+										"backgroundColor" : "#2a2a2a",
+										"borderRadius" : "3px"},
+							"objects" : [
+
+								{"h3" : {
+									"innerHTML" : "Registrera DUO match"
+									}
+								},
+								{"input" : {
+									"id" : "player_one",
+									"name" : "player_one",
+									"type" : "text",
+									"value" : player_one ? player_one : '',
+									"placeholder" : "Spelarnamn #1",
+									}
+								},
+								{"input" : {
+									"id" : "player_two",
+									"name" : "player_two",
+									"type" : "text",
+									"value" : player_two ? player_two : '',
+									"placeholder" : "Spelarnamn #2",
+									}
+								},
+								{"input" : {
+									"id" : "placement",
+									"name" : "placement",
+									"type" : "text",
+									"placeholder" : "Placering",
+									}
+								},
+								{"input" : {
+									"id" : "kills",
+									"name" : "kills",
+									"type" : "text",
+									"placeholder" : "Kills",
+									}
+								},
+								{"br" : {}},
+								{"br" : {}},
+								{"img" : {
+									"id" : "preview",
+									}
+								},
+								{"input" : {
+										"id" : "fileToUpload",
+										"name" : "fileToUpload",
+										"class" : "fileuploader",
+										"type" : "file"
+										}
+									},
+									{"label" : {
+										"id" : "fileToUpload_label",
+										"for" : "fileToUpload",
+										"class" : "fileuploadlabel",
+										"innerHTML" : "Bifoga en screenshot!"
+										}
+									},
+								{"p" : {
+									"id" : "sololink",
+									"class" : "button",
+									"styles" : {"marginBottom" : "60px"},
+									"innerHTML" : "Gå till solo-formuläret"
+									}
+								},
+								{"input" : {
+									"id" : "sendbutton",
+									"class" : "button",
+									"type" : "submit",
+									"value" : "Registrera",
+									"name" : "submit"
+									}
+								}
+							]
+						});
+
+				document.getElementById('fileToUpload').onchange = function(event) {
+					var reader = new FileReader();
+
+					reader.onload = function(e) {
+						document.getElementById('preview').setAttribute('src', e.target.result);
+						document.getElementById('preview').style.visibility = 'visible';
+
+						document.getElementById('fileToUpload_label').style.color = 'var(--green)';
+						document.getElementById('fileToUpload_label').innerHTML = 'Bifogad bild -->'
+					}
+
+					fileToUpload = event.target.files[0];
+					reader.readAsDataURL(document.getElementById('fileToUpload').files[0]);
+				};
+
+				document.getElementById('sololink').addEventListener('click', function() {
+					showSoloSubForm();
+				})
+
+				document.getElementById('sendbutton').addEventListener('click', function() {
+					submitScore();
+				})
+
+				document.getElementById('player_one').focus();
+			}
+
+			function showSubForm() {
+				let mode = localStorage.getItem('last_mode');
+				if(mode && mode != 'duo')
+					showSoloSubForm();
+				else
+					showDuoSubForm();
 			}
 
 			window.onload = function() {
-				let solo = document.getElementById('solo');
-				let duo = document.getElementById('duo');
-
-				solo.addEventListener('click', function(e) {
-					showSolo();
+				document.getElementById('company').addEventListener('click', function(e) {
+					showScoreboard();
 				});
 
-				duo.addEventListener('click', function(e) {
-					showDuo();
+				document.addEventListener('click', function(e) {
+					Object.entries(mouse).forEach(([name, func]) => {
+						func(e);
+					});
 				});
 
-				let mode = localStorage.getItem('last_mode');
-				if(mode && mode != 'duo')
-					showSolo();
-				else
-					showDuo();
+				showScoreboard();
+			}
+
+			window.onkeydown = function(e) {
+				e = e || window.event;
+				let k = e.key;
+				if(k == "Escape") {
+					//filters = {"username" : true, "password" : true};
+					let id = document.activeElement.getAttribute('id');
+					if(!id || typeof filters[id] === 'undefined')
+						destroy(sprites['popup'].obj);
+				} else if (k == 'Enter') {
+					//console.log(e.target.value);
+					if(e.target.id == 'kills')
+						submitScore();
+					
+				}
 			}
 		</script>
 	</head>
 	<body>
-		<div id="solo">Solo</div> <div id="duo">Duo</div>
-		<div id="content">
-			<div id="formFields">
-				<form method="POST" action="" id="epicForm">
-				</form>
+		<div id="menu">
+			<div class="company" id="company">
+				Fortnite
+				<p class="bottom">DHW18</p>
 			</div>
-			<img id="preview" src="">
+			<div class="buttons">
+				<input type="button" value="Registrera match" id="login_n_reg" onClick="showSubForm();">
+				<input type="button" value="Scoreboard" onClick="showScoreboard();">
+			</div>
+		</div>
+		<div id="content">
 		</div>
 	</body>
 </html>
