@@ -1,4 +1,26 @@
 <?php
+	require_once('./config.php');
+
+	$db_user = $config["database"]["user"];
+	$db_pass = $config["database"]["pass"];
+	$db_db = $config["database"]["dbname"];
+
+	date_default_timezone_set($config['timezone']);
+
+	$dbconn = pg_connect("dbname=$db_db user=$db_user password=$db_pass");
+	if (!$dbconn) {
+		die("Could not connect to database");
+	}
+
+	// Create tables if they haven't already been created.
+	// A wise person once said, let there be a class for reused objects...
+	pg_query($dbconn, "CREATE TABLE IF NOT EXISTS fortnite_solo (id SERIAL, submitted TIMESTAMP NOT NULL DEFAULT NOW(), player_id VARCHAR(255) NOT NULL, placement INT NOT NULL, kills INT NOT NULL, score INT NOT NULL, screenshot VARCHAR(64) NOT NULL, UNIQUE(player_id, screenshot));");
+	pg_query($dbconn, "CREATE TABLE IF NOT EXISTS fortnite_duo (id SERIAL, submitted TIMESTAMP NOT NULL DEFAULT NOW(), player_one VARCHAR(255) NOT NULL, player_two VARCHAR(255) NOT NULL, placement INT NOT NULL, kills INT NOT NULL, score INT NOT NULL, screenshot VARCHAR(64) NOT NULL, UNIQUE(player_one, player_two, screenshot));");
+	pg_query($dbconn, "CREATE TABLE IF NOT EXISTS bans (player_id VARCHAR(255));");
+
+	$solo_results = pg_query($dbconn, "SELECT player_id, placement, kills, score FROM fortnite_solo WHERE player_id NOT IN (SELECT player_id FROM bans) ORDER BY score DESC;");
+	$team_results = pg_query($dbconn, "SELECT player_one, player_two, placement, kills, score FROM fortnite_duo WHERE player_one NOT IN (SELECT player_id FROM bans) AND player_two NOT IN (SELECT player_id FROM bans) ORDER BY score DESC;");
+
 	// The pure scoreboard is at the bottom
 	// This big chunk of HTML is used for the "TV-mode"
 	if(isset($_GET['mode']) && $_GET['mode'] == 'tv') {
@@ -55,8 +77,8 @@
 				height: 100%;
 				background-color: #272822;
 
-				column-count: 2;
-				column-width: 50%;
+				column-count: 1;
+				column-width: 100%;
 				column-gap: 2px;
 			}
 
@@ -103,69 +125,59 @@
 	}
 	//** This is where the TV-Mode ends.
 ?>
-<div id="moo">
-	<?php
-		$db_user = 'esport';
-		$db_pass = null;
-		$db_db = 'esport';
-
-		$dbconn = pg_connect("dbname=$db_db user=$db_user password=$db_pass");
-		if (!$dbconn) {
-			die("Could not connect to database");
-		}
-
-		// Create tables if they haven't already been created.
-		// A wise person once said, let there be a class for reused objects...
-		pg_query($dbconn, "CREATE TABLE IF NOT EXISTS fortnite_solo (id SERIAL, player_id VARCHAR(255), placement INT, kills INT, score INT);");
-		pg_query($dbconn, "CREATE TABLE IF NOT EXISTS fortnite_duo (id SERIAL, player_one VARCHAR(255), player_two VARCHAR(255), placement INT, kills INT, score INT);");
-		pg_query($dbconn, "CREATE TABLE IF NOT EXISTS bans (player_id VARCHAR(255));");
-
-		$solo_results = pg_query($dbconn, "SELECT player_id, placement, kills, score FROM fortnite_solo WHERE player_id NOT IN (SELECT player_id FROM bans) ORDER BY score DESC;");
-		$team_results = pg_query($dbconn, "SELECT player_one, player_two, placement, kills, score FROM fortnite_duo WHERE player_one NOT IN (SELECT player_id FROM bans) AND player_two NOT IN (SELECT player_id FROM bans) ORDER BY score DESC;");
+<?php
+if(1==2) {
 	?>
-	<table>
-		<tr>
-			<th class="mode solo" colspan="2">
-				solo
-			</th>
-		</tr>
-		<tr>
-			<th class="pname">
-				Player Name
-			</th>
-			<th class="pscore">
-				Player score
-			</th>
-		</tr>
-		<?php
+	<div id="moo">
 
-			if (!$solo_results || pg_num_rows($solo_results) <= 0) {
-				print '<tr><td colspan="2">There are no scores here yet.</td></tr>';
-			} else {
-				$players = array();
-				while ($row = pg_fetch_assoc($solo_results)) {
-					if(!isset($players[$row['player_id']]))
-						$players[$row['player_id']] = array('player_id' => $row['player_id'], 'games' => array(), 'top_5' => array(), 'total_score_top_5' => 0);
+		<table>
+			<tr>
+				<th class="mode solo" colspan="2">
+					solo
+				</th>
+			</tr>
+			<tr>
+				<th class="pname">
+					Player Name
+				</th>
+				<th class="pscore">
+					Player score
+				</th>
+			</tr>
+			<?php
 
-					$game_struct = array('placement' => $row['placement'], 'kills' => $row['kills'], 'score' => $row['score']);
-					if(sizeof($players[$row['player_id']]['top_5']) < 5) {
-						$players[$row['player_id']]['top_5'][] = $game_struct;
-						$players[$row['player_id']]['total_score_top_5'] += $game_struct['score'];
+				if (time() - strtotime($config["start_dates"]["solo"]) < 0) {
+					print '<tr><td colspan="2" style="color: var(--pink);">The solo-tournament has not begun yet.</td></tr>';
+				} else if (!$solo_results || pg_num_rows($solo_results) <= 0) {
+					print '<tr><td colspan="2">There are no scores here yet.</td></tr>';
+				} else {
+					$players = array();
+					while ($row = pg_fetch_assoc($solo_results)) {
+						if(!isset($players[$row['player_id']]))
+							$players[$row['player_id']] = array('player_id' => $row['player_id'], 'games' => array(), 'top_5' => array(), 'total_score_top_5' => 0);
+
+						$game_struct = array('placement' => $row['placement'], 'kills' => $row['kills'], 'score' => $row['score']);
+						if(sizeof($players[$row['player_id']]['top_5']) < 5) {
+							$players[$row['player_id']]['top_5'][] = $game_struct;
+							$players[$row['player_id']]['total_score_top_5'] += $game_struct['score'];
+						}
+					}
+
+					usort($players, function($a, $b){
+						return $a['total_score_top_5'] == $b['total_score_top_5'] ? 0 : $a['total_score_top_5'] < $b['total_score_top_5'] ? 1 : -1;
+					});
+
+					foreach($players as $player_id => $data) {
+						print "<tr><td class='name'>" . $data['player_id'] . "</td><td>" . $data['total_score_top_5'] . "</td></tr>";
 					}
 				}
 
-				usort($players, function($a, $b){
-					return $a['total_score_top_5'] == $b['total_score_top_5'] ? 0 : $a['total_score_top_5'] < $b['total_score_top_5'] ? 1 : -1;
-				});
-
-				foreach($players as $player_id => $data) {
-					print "<tr><td class='name'>" . $data['player_id'] . "</td><td>" . $data['total_score_top_5'] . "</td></tr>";
-				}
-			}
-
-		?>
-	</table>
-</div>
+			?>
+		</table>
+	</div>
+<?php
+}
+?>
 <div id="moo2">
 	<table>
 		<tr>
@@ -178,11 +190,14 @@
 				Player Names
 			</th>
 			<th class="pscore">
-				Player score
+				Team score
 			</th>
 		</tr>
 		<?php
-			if (!$team_results || pg_num_rows($team_results) <= 0) {
+
+			if (time() - strtotime($config["start_dates"]["duo"]) < 0) {
+				print '<tr><td colspan="2" style="color: var(--pink);">The duo-tournament has not begun yet.</td></tr>';
+			} else if (!$team_results || pg_num_rows($team_results) <= 0) {
 				print '<tr><td colspan="2">There are no scores here yet.</td></tr>';
 			} else {
 				$teams = array();
